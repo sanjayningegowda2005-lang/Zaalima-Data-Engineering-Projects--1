@@ -5,16 +5,22 @@ Description: Coordinates data ingestion, ETL transformation, database loading, a
 """
 import logging
 import sys
+import config
 
-# Configure logger for pipeline execution
+# Configure dual logging (Console + Persistent File Log)
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[logging.StreamHandler(sys.stdout)]
+    level=getattr(logging, config.LOG_LEVEL),
+    format="%(asctime)s - [%(levelname)s] - %(message)s",
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+        logging.FileHandler(config.LOG_FILE)
+    ]
 )
 
 def run_pipeline():
     logging.info("=== Starting Data Pipeline Execution ===")
+    logging.info(f"Target Database: {config.DB_PATH}")
+    logging.info(f"Data Storage Directory: {config.DATA_DIR}")
     
     # Step 1: Ingestion Boundary
     logging.info("[1/4] Ingesting raw dataset...")
