@@ -1,4 +1,5 @@
 import streamlit as st
+from Dashboard.utils import get_database_connection,fetch_data
 
 st.set_page_config(
     page_title="Data Analytics Dashboard",
