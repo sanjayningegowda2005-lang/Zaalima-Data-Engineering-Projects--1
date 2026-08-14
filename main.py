@@ -7,6 +7,7 @@ import logging
 import sys
 import config
 from scripts.ingest_data import ingest_raw_data
+from scripts.transform import transform_raw_data
 
 # Configure dual logging (Console + Persistent File Log)
 logging.basicConfig(
@@ -25,11 +26,12 @@ def run_pipeline():
     # Step 1: Ingestion Boundary
     logging.info("[1/4] Ingesting raw dataset...")
     raw_data = ingest_raw_data(config.DATA_DIR)
-    if raw_data:
-        logging.info(f"Sample Ingested Record: {raw_data[0]}")
     
     # Step 2: Transformation & Cleaning Boundary
     logging.info("[2/4] Running ETL cleaning routines...")
+    transformed_data = transform_raw_data(raw_data)
+    if transformed_data:
+        logging.info(f"Sample Transformed Record: {transformed_data[0]}")
     
     # Step 3: Database Storage Boundary
     logging.info("[3/4] Persisting data to SQL staging tables...")

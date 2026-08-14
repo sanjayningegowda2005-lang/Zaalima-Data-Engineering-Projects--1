@@ -1,35 +1,46 @@
-import pandas as pd
+"""
+ETL Data Transformation & Cleaning Engine
+Author: Sanjay (Team Lead)
+Description: Cleans, casts data types, and enriches raw ingested records.
+"""
 import logging
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+def transform_raw_data(raw_records):
+    """
+    Cleans raw CSV records, handles missing fields, and adds calculated metrics.
+    """
+    if not raw_records:
+        logging.warning("No raw records provided for transformation.")
+        return []
 
-def transform_data(df: pd.DataFrame) -> pd.DataFrame:
-    logging.info("Starting data transformation...")
+    cleaned_records = []
     
-    # 1. Standardize column names (lowercase, replace spaces/special chars with underscores)
-    df.columns = (
-        df.columns
-        .str.strip()
-        .str.lower()
-        .str.replace(' ', '_')
-        .str.replace('[^a-zA-Z0-9_]', '', regex=True)
-    )
-    
-    # 2. Handle missing values in categorical fields
-    if 'churn_reason' in df.columns:
-        df['churn_reason'] = df['churn_reason'].fillna('Not Churned')
-        
-    # 3. Strip whitespace from string columns
-    str_cols = df.select_dtypes(include=['object']).columns
-    for col in str_cols:
-        df[col] = df[col].astype(str).str.strip()
+    for row in raw_records:
+        try:
+            # 1. Clean and cast data types
+            order_id = int(row["order_id"])
+            customer_name = row["customer_name"].strip()
+            product = row["product"].strip()
+            quantity = int(row["quantity"])
+            unit_price = float(row["unit_price"])
+            order_date = row["order_date"].strip()
+            
+            # 2. Derived field (Feature Engineering)
+            total_amount = quantity * unit_price
 
-    logging.info(f"Transformation complete. Columns standardized: {list(df.columns[:5])}...")
-    return df
+            cleaned_record = {
+                "order_id": order_id,
+                "customer_name": customer_name,
+                "product": product,
+                "quantity": quantity,
+                "unit_price": unit_price,
+                "total_amount": total_amount,
+                "order_date": order_date
+            }
+            cleaned_records.append(cleaned_record)
 
-if __name__ == "__main__":
-    from ingest import ingest_data
-    
-    raw_df = ingest_data()
-    cleaned_df = transform_data(raw_df)
-    print(cleaned_df[['customer_id', 'churn_reason']].head())
+        except Exception as e:
+            logging.error(f"Error processing row {row.get('order_id')}: {e}")
+
+    logging.info(f"Successfully transformed {len(cleaned_records)} records.")
+    return cleaned_records
