@@ -1,22 +1,38 @@
 import pandas as pd
+import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 import psycopg2
-#postgreSQL connection
-def get_sqlite_engine(db_path="DATAB"):
-    engine = create_engine("sqlite:///%s" % db_path)
-    return engine
-def get_postgre_engine(user="postgres",password="Harsha%401131",host="localhost",port=5432,db_name="prg"):
-    con_str="postgresql://%s:%s@%s:%s/%s" % (user,password,host,port,db_name)
+
+# Load environment variables
+load_dotenv()
+
+# PostgreSQL connection using env variables
+def get_postgre_engine():
+    user = os.getenv("DB_USER")
+    password = os.getenv("DB_PASS")
+    host = os.getenv("DB_HOST")
+    port = os.getenv("DB_PORT")
+    db_name = os.getenv("DB_NAME")
+
+    con_str = f"postgresql://{user}:{password}@{host}:{port}/{db_name}"
     engine = create_engine(con_str)
     return engine
-#test database connection
+
+# SQLite connection (optional for testing)
+def get_sqlite_engine(db_path="mydb.sqlite"):
+    engine = create_engine(f"sqlite:///{db_path}")
+    return engine
+
+# Test database connection
 def test_connection(engine):
     try:
         with engine.connect() as conn:
             print("Connection successful")
     except Exception as e:
         print("Connection failed:", e)
-#CREATION OF TABLE
+
+# Table creation
 def table_creation():
     create_table_query = """
     CREATE TABLE IF NOT EXISTS customer_churn (
@@ -44,14 +60,14 @@ def table_creation():
     );
     """
     try:
-        conn=psycopg2.connect(
-            dbname="prg",
-            user="postgres",
-            password="Harsha@1131",
-            host="localhost",
-            port="5432"
+        conn = psycopg2.connect(
+            dbname=os.getenv("DB_NAME"),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASS"),
+            host=os.getenv("DB_HOST"),
+            port=os.getenv("DB_PORT")
         )
-        cur=conn.cursor()
+        cur = conn.cursor()
         cur.execute(create_table_query)
         conn.commit()
         cur.close()
@@ -59,47 +75,37 @@ def table_creation():
         print("Table created successfully")
     except Exception as e:
         print("Error creating table:", e)
-#insert exection logic
-def insert_from_csv(csv_file):
-      df=pd.read_csv(r"C:\Users\harsh\Downloads\archive\telco.csv")
-      df=df.where(pd.notnull(df), None)
-      insert_query = """
-        INSERT INTO customer_churn (customerID, gender, SeniorCitizen,
-        Partner, Dependents, tenure, PhoneService, MultipleLines, InternetService,
-        OnlineSecurity, OnlineBackup, DeviceProtection, TechSupport, StreamingTV,
-        StreamingMovies, Contract, PaperlessBilling, PaymentMethod, MonthlyCharges,
-        TotalCharges, Churn)
+
+# Insert data from CSV
+def insert_from_csv(csv_file="Telco.csv"):
+    df = pd.read_csv(csv_file)
+    df = df.where(pd.notnull(df), None)
+
+    insert_query = """
+        INSERT INTO customer_churn (
+            customerID, gender, SeniorCitizen, Partner, Dependents,
+            tenure, PhoneService, MultipleLines, InternetService,
+            OnlineSecurity, OnlineBackup, DeviceProtection, TechSupport,
+            StreamingTV, StreamingMovies, Contract, PaperlessBilling,
+            PaymentMethod, MonthlyCharges, TotalCharges, Churn
+        )
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         ON CONFLICT (customerID) DO NOTHING;
     """
-      try:
-          conn=psycopg2.connect(
-              dbname="prg",
-              user="postgres",
-              password="Harsha@1131",
-              host="localhost",
-              port="5432"
-          )
-          cur=conn.cursor()
-          data=[tuple(x) for index, x in df.iterrows()]
-          cur.executemany(insert_query,data)
-          conn.commit()
-          print("Data inserted successfully")
-          cur.close()
-          conn.close()
-      except Exception as e:
-            print("Error inserting data:", e)
-#execute table creation,verify DataBase
-if __name__ == "__main__":
-    sql_engine=get_sqlite_engine("mydb.sqlite")
-    print("sql engine created:", sql_engine)
-    test_connection(sql_engine)
-    postgre_engine=get_postgre_engine()
-    print("postgreSQL engine created:",postgre_engine)
-    test_connection(postgre_engine)
-    table_creation()
-    insert_from_csv(r"C:\Users\harsh\Downloads\archive\telco.csv")
-
-
-
-
+    try:
+        conn = psycopg2.connect(
+            dbname=os.getenv("DB_NAME"),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASS"),
+            host=os.getenv("DB_HOST"),
+            port=os.getenv("DB_PORT")
+        )
+        cur = conn.cursor()
+        data = [tuple(x) for _, x in df.iterrows()]
+        cur.executemany(insert_query, data)
+        conn.commit()
+        print("Data inserted successfully")
+        cur.close()
+        conn.close()
+    except Exception as e:
+        print("Error inserting data:", e)
