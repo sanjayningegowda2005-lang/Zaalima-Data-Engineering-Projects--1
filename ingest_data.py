@@ -1,53 +1,40 @@
 import pandas as pd
-import psycopg2
-def connect_to_postgres():
-    
+import json
+from DATAB import insert_from_csv
+
+def read_csv_file(file_path):
+    return pd.read_Csv(file_path)
+def read_excel_file(file_path):
+    return pd.read_csv(file_path)
+
+def load_schema(schema_file="schema.json"):
     try:
-        conn=psycopg2.connect(
-            dbname="project",
-            user="postgres",
-            password="c##cse",
-            host="localhost",
-            port="5432"
-        )
-        cur = conn.cursor()
-        return conn,cur
-    except:
-        return None,None
-
-def table_creation():
-    create_table_query = """
-        CREATE TABLE IF NOT EXISTS customer_churn (
-            customerID VARCHAR(50) PRIMARY KEY,
-            gender VARCHAR(10),
-            SeniorCitizen INT,
-            Partner VARCHAR(10),
-            Dependents VARCHAR(10),
-            tenure INT,
-            PhoneService VARCHAR(10),
-            MultipleLines VARCHAR(20),
-            InternetService VARCHAR(20),
-            OnlineSecurity VARCHAR(20),
-            OnlineBackup VARCHAR(20),
-            DeviceProtection VARCHAR(20),
-            TechSupport VARCHAR(20),
-            StreamingTV VARCHAR(20),
-            StreamingMovies VARCHAR(20),
-            Contract VARCHAR(20),
-            PaperlessBilling VARCHAR(10),
-            PaymentMethod VARCHAR(50),
-            MonthlyCharges FLOAT,
-            TotalCharges VARCHAR(20),
-            Churn VARCHAR(10)
-        );
-        """
-    cur.execute(create_table_query)
-    conn.commit()
-    cur.close()
-    conn.close()
-table_creation()  
+        with open(schema_file,"r") as f:
+            schema=json.load(f)
+        print("schema loaded successfully")
+        return schema
+    except Exception as e:
+        print("error loading schema:",e)
+        return None
+def safe_read_csv(file_path):
+    for enc in ["utf-8", "latin-1"]:
+        try:
+            df=pd.read_csv(file_path,encoding=enc)
+            print("Read successful with",enc)
+            return df
+        except Exception as e:
+            print("Failed with", enc, ":", e)
+            continue
+    print("Failed to read file with common encodings.")
+    return None
+def push_to_database(file_path):
+    df=safe_read_csv(file_path)
+    if df is not None:
+        insert_from_csv(df)
+    else:
+        print( "No data ingested due to file read failure.")
+if __name__=="__main__":
+    schema=load_schema()
+    print("Schema:", schema)
+    push_to_database(r"C:\Users\abhik\OneDrive\Documents\telco.csv")
     
-dataframe=pd.read_csv(r"C:\Users\abhik\Desktop\DATA\telco_churn.csv")
-print(dataframe.info())
-
-
