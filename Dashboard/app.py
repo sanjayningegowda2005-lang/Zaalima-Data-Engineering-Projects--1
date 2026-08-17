@@ -1,5 +1,5 @@
 import streamlit as st
-from Dashboard.utils import get_database_connection,fetch_data
+from utils import get_database_connection,fetch_data
 
 st.set_page_config(
     page_title="Data Analytics Dashboard",
@@ -17,21 +17,30 @@ tab1, tab2, tab3 = st.tabs([
     "Detailed Analytics",
     "Data Quality"
 ])
-
 with tab1:
     st.header("Executive Overview")
     st.info("Executive metrics and summary charts will be displayed here.")
 
+    # KPI Summary Cards
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.metric("Total Records", "1,250")
+        st.metric(
+            label="Total Records Processed",
+            value="1,250"
+        )
 
     with col2:
-        st.metric("Total Revenue", "₹2.5L")
+        st.metric(
+            label="Data Freshness",
+            value="Today"
+        )
 
     with col3:
-        st.metric("Data Quality", "95%")
+        st.metric(
+            label="Key Category Count",
+            value="10"
+        )
 
 with tab2:
     st.header("Detailed Analytics")
