@@ -8,6 +8,7 @@ import sys
 import config
 from scripts.ingest_data import ingest_raw_data
 from scripts.transform import transform_raw_data
+from scripts.load import load_to_sqlite
 
 # Configure dual logging (Console + Persistent File Log)
 logging.basicConfig(
@@ -30,11 +31,10 @@ def run_pipeline():
     # Step 2: Transformation & Cleaning Boundary
     logging.info("[2/4] Running ETL cleaning routines...")
     transformed_data = transform_raw_data(raw_data)
-    if transformed_data:
-        logging.info(f"Sample Transformed Record: {transformed_data[0]}")
     
     # Step 3: Database Storage Boundary
     logging.info("[3/4] Persisting data to SQL staging tables...")
+    load_to_sqlite(transformed_data, config.DB_PATH)
     
     # Step 4: Quality & Dashboard Readiness
     logging.info("[4/4] Running data quality validations...")
