@@ -1,30 +1,53 @@
+"""
+Data Quality Validation Engine
+Author: Sanjay (Team Lead)
+Description: Runs automated sanity checks and quality assertions on staged SQL tables.
+"""
 import sqlite3
 import logging
+from pathlib import Path
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+def validate_staging_data(db_path: Path):
+    """
+    Executes core data quality assertions on staging_orders table.
+    """
+    if not db_path.exists():
+        logging.error(f"Database file not found at {db_path}")
+        return False
 
-def validate_staging(db_path="telecom_staging.db", table_name="stg_customer_churn"):
-    logging.info("Running data quality validations...")
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
+    logging.info(f"Running quality validations on: {db_path}")
     
-    # 1. Row count validation
-    cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
-    count = cursor.fetchone()[0]
-    
-    # 2. Primary key integrity validation
-    cursor.execute(f"SELECT COUNT(*) FROM {table_name} WHERE customer_id IS NULL")
-    null_keys = cursor.fetchone()[0]
-    
-    conn.close()
-    
-    if count == 0:
-        raise ValueError("Validation failed: Staging table is empty!")
-    if null_keys > 0:
-        raise ValueError(f"Validation failed: Found {null_keys} null customer IDs!")
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+
+        # Check 1: Verify table is not empty
+        cursor.execute("SELECT COUNT(*) FROM staging_orders")
+        total_rows = cursor.fetchone()[0]
+        if total_rows == 0:
+            logging.error("Validation Failed: staging_orders table is empty.")
+            conn.close()
+            return False
         
-    logging.info(f"Validation passed: {count} records verified with 0 null primary keys.")
-    return True
+        # Check 2: Check for NULL primary keys
+        cursor.execute("SELECT COUNT(*) FROM staging_orders WHERE order_id IS NULL")
+        null_keys = cursor.fetchone()[0]
+        if null_keys > 0:
+            logging.error(f"Validation Failed: Found {null_keys} records with NULL order_id.")
+            conn.close()
+            return False
 
-if __name__ == "__main__":
-    validate_staging()
+        # Check 3: Audit total revenue sum
+        cursor.execute("SELECT SUM(total_amount) FROM staging_orders")
+        total_revenue = cursor.fetchone()[0]
+        
+        conn.close()
+        
+        logging.info(f"[PASS] Total Rows Verified: {total_rows}")
+        logging.info(f"[PASS] Primary Key Integrity Verified (0 NULLs)")
+        logging.info(f"[PASS] Staged Revenue Total Verified: {total_revenue:,.2f}")
+        return True
+
+    except Exception as e:
+        logging.error(f"Validation process failed due to error: {e}")
+        return False

@@ -9,6 +9,7 @@ import config
 from scripts.ingest_data import ingest_raw_data
 from scripts.transform import transform_raw_data
 from scripts.load import load_to_sqlite
+from scripts.validate import validate_staging_data
 
 # Configure dual logging (Console + Persistent File Log)
 logging.basicConfig(
@@ -38,8 +39,12 @@ def run_pipeline():
     
     # Step 4: Quality & Dashboard Readiness
     logging.info("[4/4] Running data quality validations...")
+    validation_passed = validate_staging_data(config.DB_PATH)
     
-    logging.info("=== Pipeline Execution Finished Successfully ===")
+    if validation_passed:
+        logging.info("=== Pipeline Execution Finished Successfully ===")
+    else:
+        logging.error("=== Pipeline Execution Finished with Validation Errors ===")
 
 if __name__ == "__main__":
     run_pipeline()
