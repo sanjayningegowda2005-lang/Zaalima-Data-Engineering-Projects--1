@@ -59,6 +59,30 @@ def table_creation():
         print("Table created successfully")
     except Exception as e:
         print("Error creating table:", e)
+#INDEX CREATION
+def create_indexes():
+    index_query = [
+        "CREATE INDEX IF NOT EXISTS idx_customer_churn_customerID ON customer_churn (customerID);",
+        "CREATE INDEX IF NOT EXISTS idx_customer_churn_contract ON customer_churn (Contract);",
+        "CREATE INDEX IF NOT EXISTS idx_customer_churn_paymentmethod ON customer_churn (PaymentMethod);",
+        "CREATE INDEX IF NOT EXISTS idx_customer_churn_churn ON customer_churn (Churn);"
+    ]
+    try:
+        with psycopg2.connect(
+            dbname="prg",
+            user="postgres",
+            password="Harsha@1131",
+            host="localhost",
+            port="5432"
+        ) as conn:
+            with conn.cursor() as cur:
+                for query in index_query:
+                    cur.execute(query)
+                conn.commit()
+                print("Indexes created successfully")
+    except Exception as e:
+        print("Error creating indexes:", e)
+
 #insert exection logic
 def insert_from_csv(csv_file):
       df=pd.read_csv(r"C:\Users\harsh\Downloads\archive\telco.csv")
@@ -98,6 +122,7 @@ if __name__ == "__main__":
     print("postgreSQL engine created:",postgre_engine)
     test_connection(postgre_engine)
     table_creation()
+    create_indexes()
     insert_from_csv(r"C:\Users\harsh\Downloads\archive\telco.csv")
 
 
