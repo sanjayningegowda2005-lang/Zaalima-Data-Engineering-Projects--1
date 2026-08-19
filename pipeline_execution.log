@@ -55,3 +55,22 @@
 2026-08-18 20:36:52,037 - [INFO] - [PASS] Primary Key Integrity Verified (0 NULLs)
 2026-08-18 20:36:52,037 - [INFO] - [PASS] Staged Revenue Total Verified: 84,600.00
 2026-08-18 20:36:52,037 - [INFO] - === Pipeline Execution Finished Successfully ===
+2026-08-19 21:36:28,133 - [INFO] - === Starting Data Pipeline Execution ===
+2026-08-19 21:36:28,134 - [INFO] - Target Database: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-19 21:36:28,135 - [INFO] - [1/5] Ingesting raw dataset...
+2026-08-19 21:36:28,135 - [INFO] - Searching for raw data file at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\Data\raw_data.csv
+2026-08-19 21:36:28,136 - [INFO] - Successfully ingested 5 records from CSV.
+2026-08-19 21:36:28,137 - [INFO] - [2/5] Running ETL cleaning routines...
+2026-08-19 21:36:28,137 - [INFO] - Successfully transformed 5 records.
+2026-08-19 21:36:28,137 - [INFO] - [3/5] Persisting data to SQL staging tables...
+2026-08-19 21:36:28,138 - [INFO] - Connecting to SQLite database at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-19 21:36:28,148 - [INFO] - Successfully staged 5 records into 'staging_orders' table. Total rows: 5
+2026-08-19 21:36:28,148 - [INFO] - [4/5] Running data quality validations...
+2026-08-19 21:36:28,148 - [INFO] - Running quality validations on: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-19 21:36:28,150 - [INFO] - [PASS] Total Rows Verified: 5
+2026-08-19 21:36:28,151 - [INFO] - [PASS] Primary Key Integrity Verified (0 NULLs)
+2026-08-19 21:36:28,151 - [INFO] - [PASS] Staged Revenue Total Verified: 84,600.00
+2026-08-19 21:36:28,152 - [INFO] - [5/5] Building analytical SQL views...
+2026-08-19 21:36:28,152 - [INFO] - Executing SQL views from: SQL\views.sql
+2026-08-19 21:36:28,166 - [INFO] - [PASS] Analytical SQL Views successfully created in SQLite.
+2026-08-19 21:36:28,166 - [INFO] - === Pipeline Execution Finished Successfully ===

@@ -1,27 +1,18 @@
--- View 1: Customer Tenure Binning
-CREATE VIEW IF NOT EXISTS v_customer_tenure_segments AS
+-- Analytical View 1: Revenue & Units Sold by Product
+CREATE VIEW IF NOT EXISTS view_product_revenue AS
 SELECT 
-    customer_id,
-    gender,
-    contract,
-    tenure_in_months,
-    CASE 
-        WHEN tenure_in_months <= 12 THEN '0-1 Years'
-        WHEN tenure_in_months <= 24 THEN '1-2 Years'
-        ELSE '2+ Years'
-    END AS tenure_group,
-    monthly_charge,
-    customer_status
-FROM stg_customer_churn;
+    product,
+    SUM(quantity) AS total_units_sold,
+    SUM(total_amount) AS total_revenue,
+    ROUND(AVG(unit_price), 2) AS avg_unit_price
+FROM staging_orders
+GROUP BY product;
 
--- View 2: High-Value Churned Customers
-CREATE VIEW IF NOT EXISTS v_high_value_churn AS
+-- Analytical View 2: Customer Spend & Order Summary
+CREATE VIEW IF NOT EXISTS view_customer_summary AS
 SELECT 
-    customer_id,
-    contract,
-    monthly_charge,
-    total_charges,
-    churn_reason
-FROM stg_customer_churn
-WHERE customer_status = 'Churned' 
-  AND monthly_charge > 70.0;
+    customer_name,
+    COUNT(order_id) AS total_orders,
+    SUM(total_amount) AS total_spent
+FROM staging_orders
+GROUP BY customer_name;

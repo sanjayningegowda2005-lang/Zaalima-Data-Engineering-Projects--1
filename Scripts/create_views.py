@@ -1,22 +1,40 @@
+"""
+SQL Views Execution Engine
+Author: Sanjay (Team Lead)
+Description: Builds analytical reporting views inside SQLite staging database.
+"""
 import sqlite3
 import logging
+from pathlib import Path
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+def create_analytical_views(db_path: Path, sql_file_path: Path):
+    """
+    Executes SQL script containing analytical view definitions.
+    """
+    if not db_path.exists():
+        logging.error(f"Database file not found at {db_path}")
+        return False
 
-def build_views(db_path="telecom_staging.db", sql_file="SQL/views.sql"):
-    logging.info(f"Connecting to database {db_path}...")
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
+    if not sql_file_path.exists():
+        logging.error(f"SQL file not found at {sql_file_path}")
+        return False
+
+    logging.info(f"Executing SQL views from: {sql_file_path}")
     
-    logging.info(f"Executing SQL view definitions from {sql_file}...")
-    with open(sql_file, 'r') as f:
-        sql_script = f.read()
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+
+        with open(sql_file_path, 'r') as file:
+            sql_script = file.read()
+
+        cursor.executescript(sql_script)
+        conn.commit()
+        conn.close()
         
-    cursor.executescript(sql_script)
-    conn.commit()
-    conn.close()
-    
-    logging.info("SQL Views created successfully in SQLite database!")
+        logging.info("[PASS] Analytical SQL Views successfully created in SQLite.")
+        return True
 
-if __name__ == "__main__":
-    build_views()
+    except Exception as e:
+        logging.error(f"Failed to create SQL views: {e}")
+        return False
