@@ -1,40 +1,52 @@
+"""
+Automated Visualization & Chart Engine
+Author: Sanjay (Team Lead)
+Description: Queries analytical SQL views and exports visual dashboard charts.
+"""
 import sqlite3
-import pandas as pd
+import logging
+from pathlib import Path
 import matplotlib.pyplot as plt
-import seaborn as sns
-import os
 
-# Ensure Dashboard folder exists
-os.makedirs("Dashboard", exist_ok=True)
+def generate_dashboard_charts(db_path: Path, output_dir: Path):
+    """
+    Extracts aggregated data from SQLite views and exports PNG visual charts.
+    """
+    if not db_path.exists():
+        logging.error(f"Database not found at {db_path}")
+        return False
 
-def generate_dashboard():
-    conn = sqlite3.connect("telecom_staging.db")
-    sns.set_theme(style="whitegrid")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    logging.info(f"Generating visual reports in: {output_dir}")
     
-    # Chart 1: Customer Status Breakdown
-    df_status = pd.read_sql_query("SELECT customer_status, COUNT(*) as count FROM stg_customer_churn GROUP BY customer_status", conn)
-    plt.figure(figsize=(7, 5))
-    sns.barplot(data=df_status, x='customer_status', y='count', palette='Blues_d')
-    plt.title("Overall Customer Status Distribution")
-    plt.xlabel("Customer Status")
-    plt.ylabel("Total Customers")
-    plt.tight_layout()
-    plt.savefig("Dashboard/customer_status_distribution.png")
-    plt.close()
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
 
-    # Chart 2: Top Churn Reasons
-    df_reasons = pd.read_sql_query("SELECT churn_reason, COUNT(*) as count FROM stg_customer_churn WHERE customer_status = 'Churned' GROUP BY churn_reason ORDER BY count DESC LIMIT 5", conn)
-    plt.figure(figsize=(9, 5))
-    sns.barplot(data=df_reasons, y='churn_reason', x='count', palette='Reds_d')
-    plt.title("Top 5 Reasons for Customer Churn")
-    plt.xlabel("Number of Churned Customers")
-    plt.ylabel("Reason")
-    plt.tight_layout()
-    plt.savefig("Dashboard/top_churn_reasons.png")
-    plt.close()
+        # Query Product Revenue View
+        cursor.execute("SELECT product, total_revenue FROM view_product_revenue")
+        rows = cursor.fetchall()
+        
+        if rows:
+            products = [r[0] for r in rows]
+            revenues = [r[1] for r in rows]
 
-    conn.close()
-    print("Dashboard charts generated successfully in 'Dashboard/' directory.")
+            plt.figure(figsize=(8, 4.5))
+            plt.bar(products, revenues, color='#1f77b4', edgecolor='black')
+            plt.title('Total Revenue by Product', fontsize=14, fontweight='bold')
+            plt.xlabel('Product Category', fontsize=11)
+            plt.ylabel('Revenue (INR)', fontsize=11)
+            plt.grid(axis='y', linestyle='--', alpha=0.7)
+            plt.tight_layout()
+            
+            chart_file = output_dir / "product_revenue_chart.png"
+            plt.savefig(chart_file, dpi=300)
+            plt.close()
+            logging.info(f"[PASS] Visual chart generated: {chart_file}")
 
-if __name__ == "__main__":
-    generate_dashboard()
+        conn.close()
+        return True
+
+    except Exception as e:
+        logging.error(f"Failed to generate dashboard charts: {e}")
+        return False
