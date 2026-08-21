@@ -3,11 +3,15 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 import psycopg2
-#import constraints from constrain
+import pathlib
+
+#import constraints from constraints.py
+from constraints import add_constraints
 
 # Load environment variables
-load_dotenv()
-
+env_path = pathlib.Path(__file__).resolve().parent / ".env"
+print("Loading environment variables from:", env_path)
+load_dotenv(dotenv_path=env_path)
 # PostgreSQL connection using env variables
 def get_postgre_engine():
     user = os.getenv("DB_USER")
@@ -80,8 +84,11 @@ def table_creation():
 # Insert data from CSV
 def insert_from_csv(csv_file="Telco.csv"):
     df = pd.read_csv(csv_file)
-    df = df.where(pd.notnull(df), None)
-
+    df = df.replace(r'^\s*$', None, regex=True)
+    #columns are converted to numeric
+    df['MonthlyCharges'] = pd.to_numeric(df['MonthlyCharges'], errors='coerce')
+    df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
+    
     insert_query = """
         INSERT INTO customer_churn (
             customerID, gender, SeniorCitizen, Partner, Dependents,
@@ -93,6 +100,8 @@ def insert_from_csv(csv_file="Telco.csv"):
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         ON CONFLICT (customerID) DO NOTHING;
     """
+    conn = None
+    cur = None
     try:
         conn = psycopg2.connect(
             dbname=os.getenv("DB_NAME"),
@@ -109,4 +118,15 @@ def insert_from_csv(csv_file="Telco.csv"):
         cur.close()
         conn.close()
     except Exception as e:
-        print("Error inserting data:", e)
+        if conn:
+            conn.rollback()
+        print("Error inserting data,rolled back:", e)
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+if __name__ == "__main__":
+    table_creation()
+    add_constraints()
+    insert_from_csv("Telco.csv")
