@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine
 import psycopg2
 import pathlib
+from audit_log import create_audit_table,log_audit
 
 #import constraints from constraints.py
 from constraints import add_constraints
@@ -115,18 +116,24 @@ def insert_from_csv(csv_file="Telco.csv"):
         cur.executemany(insert_query, data)
         conn.commit()
         print("Data inserted successfully")
+        #log successful
+        row_inserted = len(data)
+        log_audit("customer_churn", row_inserted, "Success")
         cur.close()
         conn.close()
     except Exception as e:
         if conn:
             conn.rollback()
         print("Error inserting data,rolled back:", e)
+        #log failed
+        log_audit("customer_churn", 0, "Failed")
     finally:
         if cur:
             cur.close()
         if conn:
             conn.close()
 if __name__ == "__main__":
+    create_audit_table()
     table_creation()
     add_constraints()
     insert_from_csv("Telco.csv")
