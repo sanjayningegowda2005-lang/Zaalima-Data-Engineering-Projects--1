@@ -13,6 +13,7 @@ from constraints import add_constraints
 env_path = pathlib.Path(__file__).resolve().parent / ".env"
 print("Loading environment variables from:", env_path)
 load_dotenv(dotenv_path=env_path)
+
 # PostgreSQL connection using env variables
 def get_postgre_engine():
     user = os.getenv("DB_USER")
@@ -29,6 +30,17 @@ def get_postgre_engine():
 def get_sqlite_engine(db_path="mydb.sqlite"):
     engine = create_engine(f"sqlite:///{db_path}")
     return engine
+
+#connection function for psycopg2
+def get_connection():
+    """return a psycopg2 connection using env variables"""
+    return psycopg2.connect(
+        dbname=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASS"),
+        host=os.getenv("DB_HOST"),
+        port=os.getenv("DB_PORT")
+    )
 
 # Test database connection
 def test_connection(engine):
@@ -65,20 +77,13 @@ def table_creation():
         Churn VARCHAR(10)
     );
     """
+#removed man_close and called get_connection():
     try:
-        conn = psycopg2.connect(
-            dbname=os.getenv("DB_NAME"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASS"),
-            host=os.getenv("DB_HOST"),
-            port=os.getenv("DB_PORT")
-        )
-        cur = conn.cursor()
-        cur.execute(create_table_query)
-        conn.commit()
-        cur.close()
-        conn.close()
-        print("Table created successfully")
+       with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(create_table_query)
+            conn.commit()
+            print("Table created successfully")
     except Exception as e:
         print("Error creating table:", e)
 
@@ -101,37 +106,20 @@ def insert_from_csv(csv_file="Telco.csv"):
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         ON CONFLICT (customerID) DO NOTHING;
     """
-    conn = None
-    cur = None
+    data=[tuple(x) for _, x in df.iterrows()]
     try:
-        conn = psycopg2.connect(
-            dbname=os.getenv("DB_NAME"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASS"),
-            host=os.getenv("DB_HOST"),
-            port=os.getenv("DB_PORT")
-        )
-        cur = conn.cursor()
-        data = [tuple(x) for _, x in df.iterrows()]
-        cur.executemany(insert_query, data)
-        conn.commit()
-        print("Data inserted successfully")
-        #log successful
-        row_inserted = len(data)
-        log_audit("customer_churn", row_inserted, "Success")
-        cur.close()
-        conn.close()
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.executemany(insert_query,data)
+                conn.commit()
+                print("data inserted successfully")
+                log_audit("customer_churn",len(data),"success")
     except Exception as e:
-        if conn:
-            conn.rollback()
         print("Error inserting data,rolled back:", e)
-        #log failed
         log_audit("customer_churn", 0, "Failed")
     finally:
-        if cur:
-            cur.close()
-        if conn:
-            conn.close()
+        pass
+    
 if __name__ == "__main__":
     create_audit_table()
     table_creation()
