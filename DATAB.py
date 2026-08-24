@@ -104,7 +104,27 @@ def insert_from_csv(csv_file="Telco.csv"):
             PaymentMethod, MonthlyCharges, TotalCharges, Churn
         )
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        ON CONFLICT (customerID) DO NOTHING;
+        ON CONFLICT (customerID) DO UPDATE SET
+            gender=EXCLUDED.gender,
+            SeniorCitizen=EXCLUDED.SeniorCitizen,
+            partner=EXCLUDED.Partner,
+            Dependents=EXClUDED.Dependents,
+            tenure=EXCLUDED.tenure,
+            PhoneService=EXCLUDED.PhoneService,
+            MultipleLines=EXCLUDED.MultipleLines,
+            InternetService=EXCLUDED.InternetService,
+            OnlineSecurity=EXCLUDED.OnlineSecurity,
+            OnlineBackup=EXCLUDED.OnlineBackup,
+            DeviceProtection=EXCLUDED.DeviceProtection,
+            TechSupport=EXCLUDED.TechSupport,
+            StreamingTV=EXCLUDED.StreamingTV,
+            StreamingMovies=EXCLUDED.StreamingMovies,
+            Contract=EXCLUDED.Contract,
+            PaperlessBilling=EXCLUDED.PaperlessBilling,
+            PaymentMethod=EXCLUDED.PaymentMethod,
+            MonthlyCharges=EXCLUDED.MonthlyCharges,
+            TotalCharges=EXCLUDED.TotalCharges,
+            Churn=EXCLUDED.Churn;
     """
     data=[tuple(x) for _, x in df.iterrows()]
     try:
