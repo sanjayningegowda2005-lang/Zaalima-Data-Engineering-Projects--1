@@ -118,3 +118,25 @@
 2026-08-21 12:15:24,432 - [INFO] - Generating visual reports in: Dashboard
 2026-08-21 12:15:26,498 - [INFO] - [PASS] Visual chart generated: Dashboard\product_revenue_chart.png
 2026-08-21 12:15:26,499 - [INFO] - === Pipeline Execution Finished Successfully ===
+2026-08-25 19:59:50,951 - [INFO] - === Starting Data Pipeline Execution ===
+2026-08-25 19:59:50,952 - [INFO] - Target Database: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-25 19:59:50,952 - [INFO] - [1/6] Ingesting raw dataset...
+2026-08-25 19:59:50,953 - [INFO] - Searching for raw data file at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\Data\raw_data.csv
+2026-08-25 19:59:50,954 - [INFO] - Successfully ingested 5 records from CSV.
+2026-08-25 19:59:50,955 - [INFO] - [2/6] Running ETL cleaning routines...
+2026-08-25 19:59:50,955 - [INFO] - Successfully transformed 5 records.
+2026-08-25 19:59:50,956 - [INFO] - [3/6] Persisting data to SQL staging tables...
+2026-08-25 19:59:50,956 - [INFO] - Connecting to SQLite database at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-25 19:59:50,971 - [INFO] - Successfully staged 5 records into 'staging_orders' table. Total rows: 5
+2026-08-25 19:59:50,972 - [INFO] - [4/6] Running data quality validations...
+2026-08-25 19:59:50,972 - [INFO] - Running quality validations on: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-25 19:59:50,977 - [INFO] - [PASS] Total Rows Verified: 5
+2026-08-25 19:59:50,979 - [INFO] - [PASS] Primary Key Integrity Verified (0 NULLs)
+2026-08-25 19:59:50,980 - [INFO] - [PASS] Staged Revenue Total Verified: 84,600.00
+2026-08-25 19:59:50,981 - [INFO] - [5/6] Building analytical SQL views...
+2026-08-25 19:59:50,982 - [INFO] - Executing SQL views from: SQL\views.sql
+2026-08-25 19:59:50,986 - [INFO] - [PASS] Analytical SQL Views successfully created in SQLite.
+2026-08-25 19:59:50,987 - [INFO] - [6/6] Generating dashboard reports & visualizations...
+2026-08-25 19:59:50,989 - [INFO] - Generating visual reports in: Dashboard
+2026-08-25 19:59:52,708 - [INFO] - [PASS] Visual chart generated: Dashboard\product_revenue_chart.png
+2026-08-25 19:59:52,709 - [INFO] - === Pipeline Execution Finished Successfully ===
