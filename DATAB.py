@@ -86,7 +86,25 @@ def table_creation():
             print("Table created successfully")
     except Exception as e:
         print("Error creating table:", e)
-
+#api response staging table
+def create_api_res_tab():
+    create_table_query="""
+    CREATE TABLE IF NOT EXISTS api_response_staging(
+    id SERIAL PRIMARY KEY,
+    source VARCHAR(100),
+    response_json JSONB,
+    status_code INT,
+    fetched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    processed BOOLEAN DEFAULT FALSE);
+    """
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(create_table_query)
+                conn.commit()
+                print("Table created API response staging")
+    except Exception as e:
+            print("Error creating API response staging table:", e)
 # Insert data from CSV
 def insert_from_csv(csv_file="Telco.csv"):
     df = pd.read_csv(csv_file)
@@ -143,5 +161,6 @@ def insert_from_csv(csv_file="Telco.csv"):
 if __name__ == "__main__":
     create_audit_table()
     table_creation()
+    create_api_res_tab()
     add_constraints()
     insert_from_csv("Telco.csv")
