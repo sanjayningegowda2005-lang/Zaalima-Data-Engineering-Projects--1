@@ -4,16 +4,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 def add_constraints():
-    # alter_table_query = """
-    # ALTER TABLE customer_churn
-    # ALTER COLUMN gender SET NOT NULL,
-    # ALTER COLUMN SeniorCitizen SET NOT NULL,
-    # ALTER COLUMN tenure SET NOT NULL,
-    # ALTER COLUMN InternetService SET NOT NULL,
-    # ALTER COLUMN Contract SET NOT NULL,
-    # ALTER COLUMN MonthlyCharges SET NOT NULL,
-    # ALTER COLUMN churn SET NOT NULL,
-    # """
     try:
         conn=psycopg2.connect(
             dbname=os.getenv("DB_NAME"),
