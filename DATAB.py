@@ -21,7 +21,6 @@ def get_postgre_engine():
     host = os.getenv("DB_HOST")
     port = os.getenv("DB_PORT")
     db_name = os.getenv("DB_NAME")
-
     con_str = f"postgresql://{user}:{password}@{host}:{port}/{db_name}"
     engine = create_engine(con_str)
     return engine
@@ -76,8 +75,8 @@ def table_creation():
         TotalCharges FLOAT,
         Churn VARCHAR(10)
     );
-    """
-#removed man_close and called get_connection():
+    """  
+    #removed man_close and called get_connection():
     try:
        with get_connection() as conn:
         with conn.cursor() as cur:
@@ -86,6 +85,8 @@ def table_creation():
             print("Table created successfully")
     except Exception as e:
         print("Error creating table:", e)
+
+
 #api response staging table
 def create_api_res_tab():
     create_table_query="""
@@ -105,6 +106,35 @@ def create_api_res_tab():
                 print("Table created API response staging")
     except Exception as e:
             print("Error creating API response staging table:", e)
+
+
+#dynamic table creation based on pandas dtypes
+def create_table_from_df(df,table_name="customer_churn"):
+    dtype_map={
+        "int64": "INTEGER",
+        "float64": "FLOAT",
+        "object": "VARCHAR(255)",
+        "dattime64[ns]": "TIMESTAMP"
+    }
+    columns=[]
+    for col,dtype in df.dtypes.items():
+        sql_type=dtype_map.get(str(dtype),"VARCHAR(255)")
+        if col=="customerID":
+            columns.append(f"{col} {sql_type} PRIMARY KEY")
+        else:
+            columns.append(f"{col} {sql_type}")
+    create_table_query=f"""CREATE TABLE IF NOT EXISTS {table_name}(
+    {", ".join(columns)});"""
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(create_table_query)
+                conn.commit()
+                print("Table created API response staging")
+    except Exception as e:
+        print("Error creating API response staging table:", e)
+
+
 # Insert data from CSV
 def insert_from_csv(csv_file="Telco.csv"):
     df = pd.read_csv(csv_file)
@@ -160,6 +190,8 @@ def insert_from_csv(csv_file="Telco.csv"):
     
 if __name__ == "__main__":
     create_audit_table()
+    df=pd.read_csv("Telco.csv")
+    create_table_from_df(df,"customer_churn")
     table_creation()
     create_api_res_tab()
     add_constraints()
