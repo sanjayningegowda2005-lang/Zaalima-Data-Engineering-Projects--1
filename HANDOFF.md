@@ -20,3 +20,5 @@
 - **2026-08-26:** Completed final end-to-end dry run. All 6 pipeline stages validated and dashboard generated successfully.
 
 - **2026-08-27:** Completed Day 12 development sprint. Verified core data transformations and prepped workspace for Streamlit UI integration.
+
+- **2026-08-28:** Built initial Streamlit web UI (`app.py`) for live querying of SQLite staging views (`view_product_revenue`).
