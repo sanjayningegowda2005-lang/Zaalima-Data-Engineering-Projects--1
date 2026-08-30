@@ -114,7 +114,7 @@ def create_table_from_df(df,table_name="customer_churn"):
         "int64": "INTEGER",
         "float64": "FLOAT",
         "object": "VARCHAR(255)",
-        "dattime64[ns]": "TIMESTAMP"
+        "datetime64[ns]": "TIMESTAMP"
     }
     columns=[]
     for col,dtype in df.dtypes.items():
@@ -134,16 +134,8 @@ def create_table_from_df(df,table_name="customer_churn"):
     except Exception as e:
         print("Error creating API response staging table:", e)
 
-
-# Insert data from CSV
-def insert_from_csv(csv_file="Telco.csv"):
-    df = pd.read_csv(csv_file)
-    df = df.replace(r'^\s*$', None, regex=True)
-    #columns are converted to numeric
-    df['MonthlyCharges'] = pd.to_numeric(df['MonthlyCharges'], errors='coerce')
-    df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
-    
-    insert_query = """
+#shared upsert query
+UPSERT_QUERY = """
         INSERT INTO customer_churn (
             customerID, gender, SeniorCitizen, Partner, Dependents,
             tenure, PhoneService, MultipleLines, InternetService,
@@ -174,11 +166,20 @@ def insert_from_csv(csv_file="Telco.csv"):
             TotalCharges=EXCLUDED.TotalCharges,
             Churn=EXCLUDED.Churn;
     """
+
+# Insert data from CSV
+def insert_from_csv(csv_file="Telco.csv"):
+    df = pd.read_csv(csv_file)
+    df = df.replace(r'^\s*$', None, regex=True)
+    #columns are converted to numeric
+    df['MonthlyCharges'] = pd.to_numeric(df['MonthlyCharges'], errors='coerce')
+    df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
+    
     data=[tuple(x) for _, x in df.iterrows()]
     try:
         with get_connection() as conn:
             with conn.cursor() as cur:
-                cur.executemany(insert_query,data)
+                cur.executemany(UPSERT_QUERY,data)
                 conn.commit()
                 print("data inserted successfully")
                 log_audit("customer_churn",len(data),"success")
@@ -187,7 +188,21 @@ def insert_from_csv(csv_file="Telco.csv"):
         log_audit("customer_churn", 0, "Failed")
     finally:
         pass
-    
+def insert_mock(csv_file="mock_data.csv",table_name="customer_churn"):
+    df=pd.read_csv(csv_file)
+    data=[tuple(x) for _,x in df.iterrows()]
+    try:
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.executemany(UPSERT_QUERY,data)
+                conn.commit()
+                print(f"inserted {len(data)} mock rows successfully")
+                log_audit(table_name,len(data),"mock batch success")
+    except Exception as e:
+        print("Error inserting mock batch", e)
+        log_audit(table_name, 0, "mock batch Failed")
+
+
 if __name__ == "__main__":
     create_audit_table()
     df=pd.read_csv("Telco.csv")
@@ -196,3 +211,5 @@ if __name__ == "__main__":
     create_api_res_tab()
     add_constraints()
     insert_from_csv("Telco.csv")
+    if pathlib.Path("mock_data.csv").exists():
+        insert_mock("mock_data.csv")
