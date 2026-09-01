@@ -1,0 +1,164 @@
+2026-08-11 23:13:11,923 - [INFO] - === Starting Data Pipeline Execution ===
+2026-08-11 23:13:11,924 - [INFO] - Target Database: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-11 23:13:11,925 - [INFO] - Data Storage Directory: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\Data
+2026-08-11 23:13:11,925 - [INFO] - [1/4] Ingesting raw dataset...
+2026-08-11 23:13:11,926 - [INFO] - [2/4] Running ETL cleaning routines...
+2026-08-11 23:13:11,926 - [INFO] - [3/4] Persisting data to SQL staging tables...
+2026-08-11 23:13:11,927 - [INFO] - [4/4] Running data quality validations...
+2026-08-11 23:13:11,928 - [INFO] - === Pipeline Execution Finished Successfully ===
+2026-08-13 21:38:45,039 - [INFO] - === Starting Data Pipeline Execution ===
+2026-08-13 21:38:45,040 - [INFO] - Target Database: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-13 21:38:45,041 - [INFO] - [1/4] Ingesting raw dataset...
+2026-08-13 21:38:45,042 - [INFO] - Searching for raw data file at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\Data\raw_data.csv
+2026-08-13 21:38:45,044 - [INFO] - Successfully ingested 5 records from CSV.
+2026-08-13 21:38:45,045 - [INFO] - Sample Ingested Record: {'order_id': '1001', 'customer_name': 'Ananya Sharma', 'product': 'Laptop', 'quantity': '1', 'unit_price': '55000', 'order_date': '2026-08-01'}
+2026-08-13 21:38:45,046 - [INFO] - [2/4] Running ETL cleaning routines...
+2026-08-13 21:38:45,047 - [INFO] - [3/4] Persisting data to SQL staging tables...
+2026-08-13 21:38:45,047 - [INFO] - [4/4] Running data quality validations...
+2026-08-13 21:38:45,048 - [INFO] - === Pipeline Execution Finished Successfully ===
+2026-08-14 20:53:36,971 - [INFO] - === Starting Data Pipeline Execution ===
+2026-08-14 20:53:36,971 - [INFO] - Target Database: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-14 20:53:36,971 - [INFO] - [1/4] Ingesting raw dataset...
+2026-08-14 20:53:36,972 - [INFO] - Searching for raw data file at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\Data\raw_data.csv
+2026-08-14 20:53:36,972 - [INFO] - Successfully ingested 5 records from CSV.
+2026-08-14 20:53:36,972 - [INFO] - [2/4] Running ETL cleaning routines...
+2026-08-14 20:53:36,973 - [INFO] - Successfully transformed 5 records.
+2026-08-14 20:53:36,973 - [INFO] - Sample Transformed Record: {'order_id': 1001, 'customer_name': 'Ananya Sharma', 'product': 'Laptop', 'quantity': 1, 'unit_price': 55000.0, 'total_amount': 55000.0, 'order_date': '2026-08-01'}
+2026-08-14 20:53:36,973 - [INFO] - [3/4] Persisting data to SQL staging tables...
+2026-08-14 20:53:36,973 - [INFO] - [4/4] Running data quality validations...
+2026-08-14 20:53:36,974 - [INFO] - === Pipeline Execution Finished Successfully ===
+2026-08-17 19:46:41,155 - [INFO] - === Starting Data Pipeline Execution ===
+2026-08-17 19:46:41,158 - [INFO] - Target Database: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-17 19:46:41,158 - [INFO] - [1/4] Ingesting raw dataset...
+2026-08-17 19:46:41,158 - [INFO] - Searching for raw data file at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\Data\raw_data.csv
+2026-08-17 19:46:41,160 - [INFO] - Successfully ingested 5 records from CSV.
+2026-08-17 19:46:41,161 - [INFO] - [2/4] Running ETL cleaning routines...
+2026-08-17 19:46:41,161 - [INFO] - Successfully transformed 5 records.
+2026-08-17 19:46:41,162 - [INFO] - [3/4] Persisting data to SQL staging tables...
+2026-08-17 19:46:41,162 - [INFO] - Connecting to SQLite database at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-17 19:46:41,186 - [INFO] - Successfully staged 5 records into 'staging_orders' table. Total rows: 5
+2026-08-17 19:46:41,186 - [INFO] - [4/4] Running data quality validations...
+2026-08-17 19:46:41,187 - [INFO] - === Pipeline Execution Finished Successfully ===
+2026-08-18 20:36:52,022 - [INFO] - === Starting Data Pipeline Execution ===
+2026-08-18 20:36:52,023 - [INFO] - Target Database: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-18 20:36:52,023 - [INFO] - [1/4] Ingesting raw dataset...
+2026-08-18 20:36:52,023 - [INFO] - Searching for raw data file at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\Data\raw_data.csv
+2026-08-18 20:36:52,024 - [INFO] - Successfully ingested 5 records from CSV.
+2026-08-18 20:36:52,024 - [INFO] - [2/4] Running ETL cleaning routines...
+2026-08-18 20:36:52,025 - [INFO] - Successfully transformed 5 records.
+2026-08-18 20:36:52,025 - [INFO] - [3/4] Persisting data to SQL staging tables...
+2026-08-18 20:36:52,025 - [INFO] - Connecting to SQLite database at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-18 20:36:52,035 - [INFO] - Successfully staged 5 records into 'staging_orders' table. Total rows: 5
+2026-08-18 20:36:52,035 - [INFO] - [4/4] Running data quality validations...
+2026-08-18 20:36:52,035 - [INFO] - Running quality validations on: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-18 20:36:52,037 - [INFO] - [PASS] Total Rows Verified: 5
+2026-08-18 20:36:52,037 - [INFO] - [PASS] Primary Key Integrity Verified (0 NULLs)
+2026-08-18 20:36:52,037 - [INFO] - [PASS] Staged Revenue Total Verified: 84,600.00
+2026-08-18 20:36:52,037 - [INFO] - === Pipeline Execution Finished Successfully ===
+2026-08-19 21:36:28,133 - [INFO] - === Starting Data Pipeline Execution ===
+2026-08-19 21:36:28,134 - [INFO] - Target Database: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-19 21:36:28,135 - [INFO] - [1/5] Ingesting raw dataset...
+2026-08-19 21:36:28,135 - [INFO] - Searching for raw data file at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\Data\raw_data.csv
+2026-08-19 21:36:28,136 - [INFO] - Successfully ingested 5 records from CSV.
+2026-08-19 21:36:28,137 - [INFO] - [2/5] Running ETL cleaning routines...
+2026-08-19 21:36:28,137 - [INFO] - Successfully transformed 5 records.
+2026-08-19 21:36:28,137 - [INFO] - [3/5] Persisting data to SQL staging tables...
+2026-08-19 21:36:28,138 - [INFO] - Connecting to SQLite database at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-19 21:36:28,148 - [INFO] - Successfully staged 5 records into 'staging_orders' table. Total rows: 5
+2026-08-19 21:36:28,148 - [INFO] - [4/5] Running data quality validations...
+2026-08-19 21:36:28,148 - [INFO] - Running quality validations on: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-19 21:36:28,150 - [INFO] - [PASS] Total Rows Verified: 5
+2026-08-19 21:36:28,151 - [INFO] - [PASS] Primary Key Integrity Verified (0 NULLs)
+2026-08-19 21:36:28,151 - [INFO] - [PASS] Staged Revenue Total Verified: 84,600.00
+2026-08-19 21:36:28,152 - [INFO] - [5/5] Building analytical SQL views...
+2026-08-19 21:36:28,152 - [INFO] - Executing SQL views from: SQL\views.sql
+2026-08-19 21:36:28,166 - [INFO] - [PASS] Analytical SQL Views successfully created in SQLite.
+2026-08-19 21:36:28,166 - [INFO] - === Pipeline Execution Finished Successfully ===
+2026-08-20 20:42:18,525 - [INFO] - === Starting Data Pipeline Execution ===
+2026-08-20 20:42:18,526 - [INFO] - Target Database: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-20 20:42:18,526 - [INFO] - [1/6] Ingesting raw dataset...
+2026-08-20 20:42:18,526 - [INFO] - Searching for raw data file at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\Data\raw_data.csv
+2026-08-20 20:42:18,526 - [INFO] - Successfully ingested 5 records from CSV.
+2026-08-20 20:42:18,527 - [INFO] - [2/6] Running ETL cleaning routines...
+2026-08-20 20:42:18,527 - [INFO] - Successfully transformed 5 records.
+2026-08-20 20:42:18,527 - [INFO] - [3/6] Persisting data to SQL staging tables...
+2026-08-20 20:42:18,527 - [INFO] - Connecting to SQLite database at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-20 20:42:18,534 - [INFO] - Successfully staged 5 records into 'staging_orders' table. Total rows: 5
+2026-08-20 20:42:18,534 - [INFO] - [4/6] Running data quality validations...
+2026-08-20 20:42:18,535 - [INFO] - Running quality validations on: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-20 20:42:18,536 - [INFO] - [PASS] Total Rows Verified: 5
+2026-08-20 20:42:18,536 - [INFO] - [PASS] Primary Key Integrity Verified (0 NULLs)
+2026-08-20 20:42:18,537 - [INFO] - [PASS] Staged Revenue Total Verified: 84,600.00
+2026-08-20 20:42:18,537 - [INFO] - [5/6] Building analytical SQL views...
+2026-08-20 20:42:18,537 - [INFO] - Executing SQL views from: SQL\views.sql
+2026-08-20 20:42:18,538 - [INFO] - [PASS] Analytical SQL Views successfully created in SQLite.
+2026-08-20 20:42:18,539 - [INFO] - [6/6] Generating dashboard reports & visualizations...
+2026-08-20 20:42:18,539 - [INFO] - Generating visual reports in: Dashboard
+2026-08-20 20:42:19,334 - [INFO] - [PASS] Visual chart generated: Dashboard\product_revenue_chart.png
+2026-08-20 20:42:19,334 - [INFO] - === Pipeline Execution Finished Successfully ===
+2026-08-21 12:15:24,393 - [INFO] - === Starting Data Pipeline Execution ===
+2026-08-21 12:15:24,394 - [INFO] - Target Database: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-21 12:15:24,395 - [INFO] - [1/6] Ingesting raw dataset...
+2026-08-21 12:15:24,395 - [INFO] - Searching for raw data file at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\Data\raw_data.csv
+2026-08-21 12:15:24,396 - [INFO] - Successfully ingested 5 records from CSV.
+2026-08-21 12:15:24,397 - [INFO] - [2/6] Running ETL cleaning routines...
+2026-08-21 12:15:24,397 - [INFO] - Successfully transformed 5 records.
+2026-08-21 12:15:24,397 - [INFO] - [3/6] Persisting data to SQL staging tables...
+2026-08-21 12:15:24,398 - [INFO] - Connecting to SQLite database at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-21 12:15:24,409 - [INFO] - Successfully staged 5 records into 'staging_orders' table. Total rows: 5
+2026-08-21 12:15:24,412 - [INFO] - [4/6] Running data quality validations...
+2026-08-21 12:15:24,412 - [INFO] - Running quality validations on: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-21 12:15:24,417 - [INFO] - [PASS] Total Rows Verified: 5
+2026-08-21 12:15:24,418 - [INFO] - [PASS] Primary Key Integrity Verified (0 NULLs)
+2026-08-21 12:15:24,419 - [INFO] - [PASS] Staged Revenue Total Verified: 84,600.00
+2026-08-21 12:15:24,419 - [INFO] - [5/6] Building analytical SQL views...
+2026-08-21 12:15:24,420 - [INFO] - Executing SQL views from: SQL\views.sql
+2026-08-21 12:15:24,427 - [INFO] - [PASS] Analytical SQL Views successfully created in SQLite.
+2026-08-21 12:15:24,429 - [INFO] - [6/6] Generating dashboard reports & visualizations...
+2026-08-21 12:15:24,432 - [INFO] - Generating visual reports in: Dashboard
+2026-08-21 12:15:26,498 - [INFO] - [PASS] Visual chart generated: Dashboard\product_revenue_chart.png
+2026-08-21 12:15:26,499 - [INFO] - === Pipeline Execution Finished Successfully ===
+2026-08-25 19:59:50,951 - [INFO] - === Starting Data Pipeline Execution ===
+2026-08-25 19:59:50,952 - [INFO] - Target Database: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-25 19:59:50,952 - [INFO] - [1/6] Ingesting raw dataset...
+2026-08-25 19:59:50,953 - [INFO] - Searching for raw data file at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\Data\raw_data.csv
+2026-08-25 19:59:50,954 - [INFO] - Successfully ingested 5 records from CSV.
+2026-08-25 19:59:50,955 - [INFO] - [2/6] Running ETL cleaning routines...
+2026-08-25 19:59:50,955 - [INFO] - Successfully transformed 5 records.
+2026-08-25 19:59:50,956 - [INFO] - [3/6] Persisting data to SQL staging tables...
+2026-08-25 19:59:50,956 - [INFO] - Connecting to SQLite database at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-25 19:59:50,971 - [INFO] - Successfully staged 5 records into 'staging_orders' table. Total rows: 5
+2026-08-25 19:59:50,972 - [INFO] - [4/6] Running data quality validations...
+2026-08-25 19:59:50,972 - [INFO] - Running quality validations on: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-25 19:59:50,977 - [INFO] - [PASS] Total Rows Verified: 5
+2026-08-25 19:59:50,979 - [INFO] - [PASS] Primary Key Integrity Verified (0 NULLs)
+2026-08-25 19:59:50,980 - [INFO] - [PASS] Staged Revenue Total Verified: 84,600.00
+2026-08-25 19:59:50,981 - [INFO] - [5/6] Building analytical SQL views...
+2026-08-25 19:59:50,982 - [INFO] - Executing SQL views from: SQL\views.sql
+2026-08-25 19:59:50,986 - [INFO] - [PASS] Analytical SQL Views successfully created in SQLite.
+2026-08-25 19:59:50,987 - [INFO] - [6/6] Generating dashboard reports & visualizations...
+2026-08-25 19:59:50,989 - [INFO] - Generating visual reports in: Dashboard
+2026-08-25 19:59:52,708 - [INFO] - [PASS] Visual chart generated: Dashboard\product_revenue_chart.png
+2026-08-25 19:59:52,709 - [INFO] - === Pipeline Execution Finished Successfully ===
+2026-08-28 19:37:17,310 - [INFO] - === Starting Data Pipeline Execution ===
+2026-08-28 19:37:17,312 - [INFO] - Target Database: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-28 19:37:17,312 - [INFO] - [1/6] Ingesting raw dataset...
+2026-08-28 19:37:17,313 - [INFO] - Searching for raw data file at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\Data\raw_data.csv
+2026-08-28 19:37:17,314 - [INFO] - Successfully ingested 5 records from CSV.
+2026-08-28 19:37:17,314 - [INFO] - [2/6] Running ETL cleaning routines...
+2026-08-28 19:37:17,315 - [INFO] - Successfully transformed 5 records.
+2026-08-28 19:37:17,315 - [INFO] - [3/6] Persisting data to SQL staging tables...
+2026-08-28 19:37:17,316 - [INFO] - Connecting to SQLite database at: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-28 19:37:17,330 - [INFO] - Successfully staged 5 records into 'staging_orders' table. Total rows: 5
+2026-08-28 19:37:17,330 - [INFO] - [4/6] Running data quality validations...
+2026-08-28 19:37:17,331 - [INFO] - Running quality validations on: C:\Users\sanja\Documents\Zaalima-Data-Engineering-Projects--1\pipeline_staging.db
+2026-08-28 19:37:17,333 - [INFO] - [PASS] Total Rows Verified: 5
+2026-08-28 19:37:17,333 - [INFO] - [PASS] Primary Key Integrity Verified (0 NULLs)
+2026-08-28 19:37:17,334 - [INFO] - [PASS] Staged Revenue Total Verified: 84,600.00
+2026-08-28 19:37:17,334 - [INFO] - [5/6] Building analytical SQL views...
+2026-08-28 19:37:17,335 - [INFO] - Executing SQL views from: SQL\views.sql
+2026-08-28 19:37:17,340 - [INFO] - [PASS] Analytical SQL Views successfully created in SQLite.
+2026-08-28 19:37:17,341 - [INFO] - [6/6] Generating dashboard reports & visualizations...
+2026-08-28 19:37:17,343 - [INFO] - Generating visual reports in: Dashboard
+2026-08-28 19:37:19,409 - [INFO] - [PASS] Visual chart generated: Dashboard\product_revenue_chart.png
+2026-08-28 19:37:19,412 - [INFO] - === Pipeline Execution Finished Successfully ===
