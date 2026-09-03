@@ -33,5 +33,21 @@ class TestDb(unittest.TestCase):
             conn.close()
         except Exception as e:
             self.fail(f"Database query failed: {e}")
+def test_drop_iftable_exists():
+    try:
+        conn=get_connection()
+        cursor=conn.cursor()
+        cursor.execute("Drop table if not exists customer_churn(customerID VARCHAR(50) PRIMARY KEY);")
+        conn.commit()
+        cursor.execute("DROP TABLE IF EXISTS customer_churn;")
+        conn.commit()
+        cursor.execute("SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name='customer_churn');")
+        exists=cursor.fetchone()[0]
+        self.assertFalse(exists,"table still exists")
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        raise AssertionError(f"Failed to drop table: {e}")
+
 if __name__=="__main__":
     unittest.main()
