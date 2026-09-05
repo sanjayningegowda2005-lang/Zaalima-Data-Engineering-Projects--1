@@ -1,6 +1,0 @@
-order_id,customer_name,product,quantity,unit_price,order_date
-1001,Ananya Sharma,Laptop,1,55000,2026-08-01
-1002,Rahul Verma,Mouse,2,800,2026-08-02
-1003,Priya Nair,Keyboard,1,2500,2026-08-02
-1004,Sanjay N,Monitor,2,12000,2026-08-03
-1005,Kavya Reddy,USB Cable,5,300,2026-08-04
