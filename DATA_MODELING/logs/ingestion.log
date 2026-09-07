@@ -1,0 +1,17 @@
+2026-09-05 11:18:00,066 - INFO - File extension validated: Telco.csv
+2026-09-05 11:18:00,114 - ERROR - Schema mismatch.Expected:[], Found: ['customerID', 'gender', 'SeniorCitizen', 'Partner', 'Dependents', 'tenure', 'PhoneService', 'MultipleLines', 'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract', 'PaperlessBilling', 'PaymentMethod', 'MonthlyCharges', 'TotalCharges', 'Churn']
+2026-09-05 11:19:42,105 - INFO - File extension validated: Telco.csv
+2026-09-05 11:19:42,128 - ERROR - Schema mismatch.Expected:[], Found: ['customerID', 'gender', 'SeniorCitizen', 'Partner', 'Dependents', 'tenure', 'PhoneService', 'MultipleLines', 'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract', 'PaperlessBilling', 'PaymentMethod', 'MonthlyCharges', 'TotalCharges', 'Churn']
+2026-09-05 11:23:11,779 - INFO - File extension validated: Telco.csv
+2026-09-05 11:23:11,806 - ERROR - Schema mismatch.Expected:[], Found: ['customerID', 'gender', 'SeniorCitizen', 'Partner', 'Dependents', 'tenure', 'PhoneService', 'MultipleLines', 'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract', 'PaperlessBilling', 'PaymentMethod', 'MonthlyCharges', 'TotalCharges', 'Churn']
+2026-09-05 11:23:56,481 - INFO - File extension validated: Telco.csv
+2026-09-05 11:23:56,507 - ERROR - Schema mismatch.Expected:{}, Found: ['customerID', 'gender', 'SeniorCitizen', 'Partner', 'Dependents', 'tenure', 'PhoneService', 'MultipleLines', 'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract', 'PaperlessBilling', 'PaymentMethod', 'MonthlyCharges', 'TotalCharges', 'Churn']
+2026-09-05 11:25:03,351 - INFO - File extension validated: Telco.csv
+2026-09-05 11:25:03,403 - ERROR - Schema mismatch.Expected:{}, Found: ['customerID', 'gender', 'SeniorCitizen', 'Partner', 'Dependents', 'tenure', 'PhoneService', 'MultipleLines', 'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract', 'PaperlessBilling', 'PaymentMethod', 'MonthlyCharges', 'TotalCharges', 'Churn']
+2026-09-05 11:27:35,454 - INFO - File extension validated: Telco.csv
+2026-09-05 11:27:35,476 - ERROR - Error validating schema:'str' object has no attribute 'get'
+2026-09-05 11:29:53,540 - INFO - File extension validated: Telco.csv
+2026-09-05 11:29:53,575 - ERROR - Schema mismatch.Expected:[], Found: ['customerID', 'gender', 'SeniorCitizen', 'Partner', 'Dependents', 'tenure', 'PhoneService', 'MultipleLines', 'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract', 'PaperlessBilling', 'PaymentMethod', 'MonthlyCharges', 'TotalCharges', 'Churn']
+2026-09-05 11:31:27,865 - INFO - File extension validated: Telco.csv
+2026-09-05 11:31:27,887 - INFO - Schema validation passed
+2026-09-05 11:31:30,463 - INFO - Data pushed to database from Telco.csv
