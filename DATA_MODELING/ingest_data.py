@@ -2,8 +2,10 @@ import pandas as pd
 import json
 import logging
 import os
-from DATA_MODELING.DATAB import insert_from_csv, table_creation
-
+import requests
+import time
+from DATAB import insert_from_csv, table_creation,get_connection
+conn=get_connection()
 # Ensure logs directory exists
 os.makedirs("logs",exist_ok=True)
 #CONFIGURE LOGGING
@@ -67,8 +69,49 @@ def push_to_database(file_path,schema):
         logging.info(f"Data pushed to database from {file_path}")
     except Exception as e:
         logging.error(f"Error pushing data to database: {e}")
+#INCREMENTAL LOADING(DUPLICATE DETECTION)
+def load_incremental(file_path,conn,table_name):
+    df=pd.read_csv(file_path)
+    #fetch existing keys from DB
+    with conn.cursor() as cur:
+        cur.execute(f"SELECT customerID FROM {table_name}")
+        existing_keys={row[0] for row in cur.fetchall()}
+    #filter new records
+    new_records=df[~df['customerID'].isin(existing_keys)]
+    return new_records
+
+#API DATA FETCHING
+def fetch_api_data(url):
+    response=requests.get(url)
+    response.raise_for_status()
+    data=response.json()
+    return pd.DataFrame(data)
+
+#data cleaning
+def clean_dataframe(df):
+    df=df.map(lambda x: x.strip() if isinstance(x,str) else x)
+    df=df.convert_dtypes()
+    return df
+
+#BENCHMARKING RUNTIME
+def benchmark_ingestion(file_path):
+    start=time.time()
+    df=pd.read_csv(file_path)
+    end=time.time()
+    print(f"Execution time :{end-start:.2f} seconds")
+    return df
 
 if __name__ == "__main__":
     schema = load_schema()
     table_creation()
     push_to_database("Telco.csv",schema)
+    #incremental loading example
+    conn=get_connection()
+    new_records=load_incremental("mock_data.csv",conn,"customer_churn")
+    if not new_records.empty:
+        logging.info(f"Incremental load:{len(new_records)} new records found")
+    conn.close()
+    api_df=fetch_api_data("https://jsonplaceholder.typicode.com/posts")
+    api_df=clean_dataframe(api_df)
+    logging.info(f"API ingestion :{len(api_df)} records fetched")
+    benchmark_ingestion("Telco.csv")
