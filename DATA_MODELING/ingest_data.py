@@ -2,7 +2,7 @@ import pandas as pd
 import json
 import logging
 import os
-from DATAB import insert_from_csv, table_creation
+from DATA_MODELING.DATAB import insert_from_csv, table_creation
 
 # Ensure logs directory exists
 os.makedirs("logs",exist_ok=True)
