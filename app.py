@@ -1,71 +1,97 @@
+import os
 import sqlite3
 import pandas as pd
 import streamlit as st
 
+DB_PATH = "pipeline_staging.db"
+LOG_PATH = "pipeline_execution.log"
+
 st.set_page_config(
-    page_title="Zaalima Data Pipeline Dashboard",
-    page_icon="📊",
+    page_title="Zaalima Data Engine Dashboard",
+    page_icon="⚡",
     layout="wide",
 )
 
-st.title("📊 Zaalima Data Engineering Pipeline")
-st.markdown(
-    "Real-time visibility into local staging data, transformation views, and pipeline analytics."
-)
-
-# Connect to SQLite staging database
-DB_PATH = "pipeline_staging.db"
-
-
-@st.cache_data
-def load_data(query):
-    conn = sqlite3.connect(DB_PATH)
-    df = pd.read_sql_query(query, conn)
-    conn.close()
-    return df
-
+st.title("⚡ Zaalima Data Engine - Operational Dashboard")
+st.markdown("---")
 
 # Sidebar Navigation
-st.sidebar.header("Pipeline Controls")
-view_option = st.sidebar.radio(
-    "Select View Mode", ["Overview & KPIs", "Staging Views", "Execution Logs"]
+st.sidebar.header("Navigation")
+page = st.sidebar.radio(
+    "Select View",
+    ["Overview", "Product Revenue Analysis", "Customer Insights", "System Logs"],
 )
 
-if view_option == "Overview & KPIs":
-    st.subheader("Key Performance Metrics")
-    col1, col2, col3 = st.columns(3)
 
-    try:
-        df_summary = load_data(
-            "SELECT COUNT(*) as total_records FROM product_revenue"
-        )
-        total_records = df_summary["total_records"].iloc[0]
-        col1.metric("Processed Staging Records", total_records)
-        col2.metric("Pipeline Status", "HEALTHY", delta="Active")
-        col3.metric("Database Engine", "SQLite Serverless")
-    except Exception as e:
+def get_connection():
+    return sqlite3.connect(DB_PATH)
+
+
+# Page 1: Overview
+if page == "Overview":
+    st.subheader("📌 System Summary")
+    if os.path.exists(DB_PATH):
+        conn = get_connection()
+        try:
+            total_orders = pd.read_sql_query(
+                "SELECT COUNT(*) as count FROM staging_orders;", conn
+            ).iloc[0]["count"]
+            st.metric("Total Staging Orders Processed", f"{total_orders:,}")
+            st.success("Database Connection: Active")
+        except Exception as e:
+            st.error(f"Error reading staging data: {e}")
+        finally:
+            conn.close()
+    else:
         st.warning(
-            f"Run your ETL scripts to populate staging database tables. ({e})"
+            "Database file `pipeline_staging.db` not found. Run `main.py` first."
         )
 
-elif view_option == "Staging Views":
-    st.subheader("Database Table Explorer")
-    table_name = st.selectbox(
-        "Select Staging Table / View",
-        ["product_revenue", "vw_product_summary"],
-    )
-    try:
-        df_table = load_data(f"SELECT * FROM {table_name}")
-        st.dataframe(df_table, use_container_width=True)
-    except Exception as e:
-        st.error(f"Could not load table '{table_name}': {e}")
+# Page 2: Product Revenue Analysis
+elif page == "Product Revenue Analysis":
+    st.subheader("📊 Product Revenue View")
+    if os.path.exists(DB_PATH):
+        conn = get_connection()
+        df_revenue = pd.read_sql_query(
+            "SELECT * FROM view_product_revenue;", conn
+        )
+        conn.close()
 
-elif view_option == "Execution Logs":
-    st.subheader("Pipeline Execution Logs")
-    try:
-        with open("pipeline_execution.log", "r") as log_file:
-            st.text_area(
-                "System Logs", log_file.read(), height=300, disabled=True
+        if not df_revenue.empty:
+            st.dataframe(df_revenue, use_container_width=True)
+            st.bar_chart(
+                df_revenue.set_index(df_revenue.columns[0])[
+                    df_revenue.columns[1]
+                ]
             )
-    except FileNotFoundError:
-        st.info("No log file found. Run your ETL orchestrator to generate logs.")
+        else:
+            st.info("No data in `view_product_revenue`.")
+    else:
+        st.warning("Database not found.")
+
+# Page 3: Customer Insights
+elif page == "Customer Insights":
+    st.subheader("👥 Customer Summary View")
+    if os.path.exists(DB_PATH):
+        conn = get_connection()
+        df_customer = pd.read_sql_query(
+            "SELECT * FROM view_customer_summary;", conn
+        )
+        conn.close()
+
+        if not df_customer.empty:
+            st.dataframe(df_customer, use_container_width=True)
+        else:
+            st.info("No data in `view_customer_summary`.")
+    else:
+        st.warning("Database not found.")
+
+# Page 4: System Logs
+elif page == "System Logs":
+    st.subheader("📜 Live System Logs")
+    if os.path.exists(LOG_PATH):
+        with open(LOG_PATH, "r") as f:
+            logs = f.readlines()
+        st.code("".join(logs[-50:]), language="log")
+    else:
+        st.info("No log file found yet.")
