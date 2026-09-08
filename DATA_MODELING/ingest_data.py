@@ -23,7 +23,8 @@ def load_schema(schema_file="schema.json"):
 
 def validate_file_extension(file_path):
     allowed=[".csv",".xlsx"]
-    if any(file_path.endswith(ext) for ext in allowed):
+    file_path = os.fspath(file_path)
+    if any(file_path.lower().endswith(ext) for ext in allowed):
         logging.info(f"File extension validated: {file_path}")
         return True
     else:
