@@ -1,4 +1,0 @@
-2026-09-08 12:24:01,247 - INFO - File extension validated: Telco.csv
-2026-09-08 12:24:01,248 - ERROR - Error validating schema:[Errno 2] No such file or directory: 'Telco.csv'
-2026-09-08 14:18:15,815 - INFO - File extension validated: Telco.csv
-2026-09-08 14:18:15,817 - ERROR - Error validating schema:[Errno 2] No such file or directory: 'Telco.csv'

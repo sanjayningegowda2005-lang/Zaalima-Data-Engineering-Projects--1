@@ -178,13 +178,52 @@ UPSERT_QUERY = """
 
 # Insert data from CSV
 def insert_from_csv(csv_file="Telco.csv"):
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(csv_file,header=0,encoding='utf-8-sig')
+    df.columns = (
+        df.columns.astype(str)
+        .str.replace("\ufeff", "", regex=False)
+        .str.replace("ï»¿", "", regex=False)
+        .str.strip()
+        .str.lower()
+        .str.replace(" ", "_", regex=False)
+    )
+    df.rename(columns={
+    'customerid': 'customerID',
+    'seniorcitizen': 'SeniorCitizen',
+    'partner': 'Partner',
+    'dependents': 'Dependents',
+    'tenure': 'tenure',
+    'phoneservice': 'PhoneService',
+    'multiplelines': 'MultipleLines',
+    'internetservice': 'InternetService',
+    'onlinesecurity': 'OnlineSecurity',
+    'onlinebackup': 'OnlineBackup',
+    'deviceprotection': 'DeviceProtection',
+    'techsupport': 'TechSupport',
+    'streamingtv': 'StreamingTV',
+    'streamingmovies': 'StreamingMovies',
+    'contract': 'Contract',
+    'paperlessbilling': 'PaperlessBilling',
+    'paymentmethod': 'PaymentMethod',
+    'monthlycharges': 'MonthlyCharges',
+    'totalcharges': 'TotalCharges',
+    'churn': 'Churn'
+    }, inplace=True)
+    if "customerID" not in df.columns:
+        raise ValueError(
+            f"CSV is missing required 'customerID' column. Found columns: {list(df.columns)}"
+        )
+    # Remove duplicate header rows that may exist inside the CSV
+    df = df[df["customerID"].astype(str).str.strip().str.lower() != "customerid"]
     df = df.replace(r'^\s*$', None, regex=True)
     #columns are converted to numeric
+    df['tenure'] = pd.to_numeric(df['tenure'], errors='coerce')
+    df['SeniorCitizen'] = pd.to_numeric(df['SeniorCitizen'], errors='coerce').fillna(0).astype(int)
     df['MonthlyCharges'] = pd.to_numeric(df['MonthlyCharges'], errors='coerce')
     df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
-    
-    data=[tuple(x) for _, x in df.iterrows()]
+    df = df.dropna(subset=['customerID', 'tenure'])
+    df['tenure'] = df['tenure'].astype(int)
+    data=[tuple(x) for _,x in df.iterrows()]
     try:
         with get_connection() as conn:
             with conn.cursor() as cur:
@@ -216,12 +255,13 @@ def insert_mock(csv_file="mock_data.csv",table_name="customer_churn",df=None):
 
 
 if __name__ == "__main__":
+    base_dir=pathlib.Path(__file__).resolve().parent
+    csv_path=base_dir/"Telco.csv"
     create_audit_table()
-    df=pd.read_csv("Telco.csv")
-    create_table_from_df(df,"customer_churn")
     table_creation()
     create_api_res_tab()
     add_constraints()
-    insert_from_csv("Telco.csv")
+    insert_from_csv(csv_path)
     if pathlib.Path("mock_data.csv").exists():
         insert_mock("mock_data.csv")
+

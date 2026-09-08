@@ -47,3 +47,7 @@ def log_audit(table_name,rows_inserted,status):
         print("Audit log recorded")
     except Exception as e:
         print("Error logging audit:",e)
+
+
+if __name__ == "__main__":
+    create_audit_table()

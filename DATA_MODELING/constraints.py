@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 env_path = pathlib.Path(__file__).resolve().parent / ".env"
 load_dotenv(dotenv_path=env_path)
+
 def add_constraints():
     # alter_table_query = """
     # ALTER TABLE customer_churn
@@ -71,4 +72,8 @@ def add_constraints():
         print("Constraints added successfully.")
     except Exception as e:
         print("Error adding constraints:", e)
+
+
+if __name__ == "__main__":
+    add_constraints()
 
