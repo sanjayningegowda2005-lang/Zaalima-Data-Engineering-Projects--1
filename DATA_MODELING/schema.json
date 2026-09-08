@@ -1,0 +1,27 @@
+{
+  "customer_churn": {
+    "columns": [
+      { "name": "customerID", "type": "VARCHAR(50)", "primary_key": true },
+      { "name": "gender", "type": "VARCHAR(50)" },
+      { "name": "SeniorCitizen", "type": "INTEGER" },
+      { "name": "Partner", "type": "VARCHAR(50)" },
+      { "name": "Dependents", "type": "VARCHAR(50)" },
+      { "name": "tenure", "type": "INTEGER" },
+      { "name": "PhoneService", "type": "VARCHAR(50)" },
+      { "name": "MultipleLines", "type": "VARCHAR(50)" },
+      { "name": "InternetService", "type": "VARCHAR(50)" },
+      { "name": "OnlineSecurity", "type": "VARCHAR(50)" },
+      { "name": "OnlineBackup", "type": "VARCHAR(50)" },
+      { "name": "DeviceProtection", "type": "VARCHAR(50)" },
+      { "name": "TechSupport", "type": "VARCHAR(50)" },
+      { "name": "StreamingTV", "type": "VARCHAR(50)" },
+      { "name": "StreamingMovies", "type": "VARCHAR(50)" },
+      { "name": "Contract", "type": "VARCHAR(50)" },
+      { "name": "PaperlessBilling", "type": "VARCHAR(50)" },
+      { "name": "PaymentMethod", "type": "VARCHAR(50)" },
+      { "name": "MonthlyCharges", "type": "FLOAT" },
+      { "name": "TotalCharges", "type": "FLOAT" },
+      { "name": "Churn", "type": "VARCHAR(50)" }
+    ]
+  }
+}

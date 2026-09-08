@@ -56,20 +56,20 @@ def table_creation():
         customerID VARCHAR(50) PRIMARY KEY,
         gender VARCHAR(10),
         SeniorCitizen INT,
-        Partner VARCHAR(10),
-        Dependents VARCHAR(10),
+        Partner VARCHAR(20),
+        Dependents VARCHAR(20),
         tenure INT,
-        PhoneService VARCHAR(10),
-        MultipleLines VARCHAR(10),
-        InternetService VARCHAR(20),
-        OnlineSecurity VARCHAR(10),
-        OnlineBackup VARCHAR(10),
-        DeviceProtection VARCHAR(10),
-        TechSupport VARCHAR(10),
-        StreamingTV VARCHAR(10),
-        StreamingMovies VARCHAR(10),
-        Contract VARCHAR(20),
-        PaperlessBilling VARCHAR(10),
+        PhoneService VARCHAR(20),
+        MultipleLines VARCHAR(30),
+        InternetService VARCHAR(30),
+        OnlineSecurity VARCHAR(30),
+        OnlineBackup VARCHAR(30),
+        DeviceProtection VARCHAR(30),
+        TechSupport VARCHAR(30),
+        StreamingTV VARCHAR(30),
+        StreamingMovies VARCHAR(30),
+        Contract VARCHAR(30),
+        PaperlessBilling VARCHAR(20),
         PaymentMethod VARCHAR(50),
         MonthlyCharges FLOAT,
         TotalCharges FLOAT,
@@ -81,6 +81,15 @@ def table_creation():
        with get_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(create_table_query)
+            for column in (
+                "Partner", "Dependents", "PhoneService", "MultipleLines",
+                "InternetService", "OnlineSecurity", "OnlineBackup",
+                "DeviceProtection", "TechSupport", "StreamingTV",
+                "StreamingMovies", "Contract", "PaperlessBilling"
+            ):
+                cur.execute(
+                    f"ALTER TABLE customer_churn ALTER COLUMN {column} TYPE VARCHAR(50)"
+                )
             conn.commit()
             print("Table created successfully")
     except Exception as e:
@@ -188,8 +197,11 @@ def insert_from_csv(csv_file="Telco.csv"):
         log_audit("customer_churn", 0, "Failed")
     finally:
         pass
-def insert_mock(csv_file="mock_data.csv",table_name="customer_churn"):
-    df=pd.read_csv(csv_file)
+def insert_mock(csv_file="mock_data.csv",table_name="customer_churn",df=None):
+    if table_name != "customer_churn":
+        raise ValueError("Unsupported table name")
+    if df is None:
+        df=pd.read_csv(csv_file)
     data=[tuple(x) for _,x in df.iterrows()]
     try:
         with get_connection() as conn:

@@ -1,0 +1,26 @@
+2026-09-08 14:18:32,389 - INFO - File extension validated: Telco.csv
+2026-09-08 14:18:32,412 - ERROR - Error validating schema:'NoneType' object has no attribute 'get'
+2026-09-08 14:18:32,460 - INFO - Incremental load:200 new records found
+2026-09-08 14:18:33,097 - INFO - API ingestion :100 records fetched
+2026-09-08 14:21:00,305 - INFO - File extension validated: Telco.csv
+2026-09-08 14:21:00,328 - ERROR - Error validating schema:'NoneType' object has no attribute 'get'
+2026-09-08 14:21:00,370 - INFO - Incremental load:200 new records found
+2026-09-08 14:21:00,948 - INFO - API ingestion :100 records fetched
+2026-09-08 14:21:21,911 - INFO - File extension validated: Telco.csv
+2026-09-08 14:21:21,934 - ERROR - Error validating schema:cannot use 'dict' as a set element (unhashable type: 'dict')
+2026-09-08 14:21:22,091 - INFO - Incremental load:200 new records found
+2026-09-08 14:21:22,537 - INFO - API ingestion :100 records fetched
+2026-09-08 14:22:57,386 - INFO - File extension validated: Telco.csv
+2026-09-08 14:22:57,411 - ERROR - Error validating schema:cannot use 'dict' as a set element (unhashable type: 'dict')
+2026-09-08 14:24:27,076 - INFO - File extension validated: Telco.csv
+2026-09-08 14:24:27,103 - ERROR - Error validating schema:cannot use 'dict' as a set element (unhashable type: 'dict')
+2026-09-08 14:25:16,601 - INFO - File extension validated: Telco.csv
+2026-09-08 14:25:16,628 - ERROR - Error validating schema:cannot use 'dict' as a set element (unhashable type: 'dict')
+2026-09-08 14:26:01,923 - INFO - File extension validated: Telco.csv
+2026-09-08 14:26:01,959 - ERROR - Error validating schema:cannot use 'dict' as a set element (unhashable type: 'dict')
+2026-09-08 14:26:29,102 - INFO - File extension validated: Telco.csv
+2026-09-08 14:26:29,137 - ERROR - Error validating schema:cannot use 'dict' as a set element (unhashable type: 'dict')
+2026-09-08 14:29:09,153 - INFO - File extension validated: C:\Users\abhik\Desktop\DATA\DATA_MODELING\Telco.csv
+2026-09-08 14:29:09,198 - INFO - Schema validation passed
+2026-09-08 14:29:12,685 - INFO - Data pushed to database from C:\Users\abhik\Desktop\DATA\DATA_MODELING\Telco.csv
+2026-09-08 14:31:09,174 - INFO - Schema validation passed

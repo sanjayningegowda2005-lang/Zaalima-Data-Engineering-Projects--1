@@ -16,10 +16,13 @@ def get_postgre_engine():
     db_name = os.getenv("DB_NAME")
     con_str = f"postgresql://{user}:{password}@{host}:{port}/{db_name}"
     engine = create_engine(con_str)
+    return engine
 
-def optimize_batch(csv_file="mock_data.csv",table_name="customer_churn",chunksizes=[500,1000,2000,5000]):
+def optimize_batch(csv_file="mock_data.csv",table_name="customer_churn",chunksizes=None):
+    if chunksizes is None:
+        chunksizes = [500, 1000, 2000, 5000]
     df=pd.read_csv(csv_file)
-    engine=get_postgre_engine
+    engine=get_postgre_engine()
     for size in chunksizes:
         start=time.time()
         df.to_sql(
