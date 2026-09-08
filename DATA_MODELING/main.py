@@ -1,6 +1,6 @@
 import pathlib
-from DATAB import table_creation
-from ingest_data import load_schema, push_to_database
+from .DATAB import table_creation
+from .ingest_data import load_schema, push_to_database
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 
 def run_pipeline():

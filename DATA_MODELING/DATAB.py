@@ -4,10 +4,16 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine
 import psycopg2
 import pathlib
-from audit_log import create_audit_table,log_audit
+try:
+    from DATA_MODELING.audit_log import create_audit_table, log_audit
+except ModuleNotFoundError:
+    from audit_log import create_audit_table, log_audit
 
 #import constraints from constraints.py
-from constraints import add_constraints
+try:
+    from .constraints import add_constraints
+except ImportError:
+    from constraints import add_constraints
 
 # Load environment variables
 env_path = pathlib.Path(__file__).resolve().parent / ".env"

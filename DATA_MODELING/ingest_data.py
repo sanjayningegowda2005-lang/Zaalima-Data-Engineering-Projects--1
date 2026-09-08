@@ -2,18 +2,25 @@ import pandas as pd
 import json
 import logging
 import os
-from DATAB import insert_from_csv, table_creation
+from pathlib import Path
+try:
+    from .DATAB import insert_from_csv, table_creation
+except ImportError:
+    from DATAB import insert_from_csv, table_creation
+
+BASE_DIR = Path(__file__).resolve().parent
 
 # Ensure logs directory exists
-os.makedirs("logs",exist_ok=True)
+os.makedirs(BASE_DIR / "logs", exist_ok=True)
 #CONFIGURE LOGGING
-logging.basicConfig(filename="logs/ingestion.log",
+logging.basicConfig(filename=BASE_DIR / "logs" / "ingestion.log",
                     level=logging.INFO,
                     format="%(asctime)s - %(levelname)s - %(message)s")
 
-def load_schema(schema_file="schema.json"):
+def load_schema(schema_file=None):
     try:
-        with open(schema_file, "r") as f:
+        schema_path = Path(schema_file) if schema_file else BASE_DIR / "schema.json"
+        with open(schema_path, "r") as f:
             schema = json.load(f)
         print("Schema loaded successfully")
         return schema
@@ -33,7 +40,13 @@ def validate_file_extension(file_path):
 
 def validate_schema(file_path,schema):
     try:
-        df=pd.read_csv(file_path)
+        df=pd.read_csv(file_path, encoding="utf-8-sig")
+        df.columns = (
+            df.columns.astype(str)
+            .str.replace("\ufeff", "", regex=False)
+            .str.replace("ï»¿", "", regex=False)
+            .str.strip()
+        )
         expected_cols=schema.get("customer_churn",{}).get("columns",[])
         if set(expected_cols)==set(df.columns):
             logging.info("Schema validation passed")
@@ -58,6 +71,12 @@ def safe_read_csv(file_path):
     print("Failed to read file with common encodings.")
     return None
 
+
+def clean_dataframe(df):
+    """Trim string values and use pandas' nullable dtypes."""
+    cleaned = df.map(lambda value: value.strip() if isinstance(value, str) else value)
+    return cleaned.convert_dtypes()
+
 def push_to_database(file_path,schema):
     if not validate_file_extension(file_path):
         return
@@ -72,4 +91,4 @@ def push_to_database(file_path,schema):
 if __name__ == "__main__":
     schema = load_schema()
     table_creation()
-    push_to_database("Telco.csv",schema)
+    push_to_database(BASE_DIR / "Telco.csv", schema)
