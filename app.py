@@ -1,97 +1,50 @@
-import os
+import streamlit as st
 import sqlite3
 import pandas as pd
-import streamlit as st
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-DB_PATH = "pipeline_staging.db"
-LOG_PATH = "pipeline_execution.log"
+st.set_page_config(page_title="Zaalima Data Analytics Engine", layout="wide")
 
-st.set_page_config(
-    page_title="Zaalima Data Engine Dashboard",
-    page_icon="⚡",
-    layout="wide",
-)
+st.title("📊 Zaalima Data Analytics Engine")
 
-st.title("⚡ Zaalima Data Engine - Operational Dashboard")
-st.markdown("---")
+# Fetch data from staging database
+@st.cache_data
+def load_data():
+    conn = sqlite3.connect("pipeline_staging.db")
+    df_revenue = pd.read_sql_query("SELECT * FROM view_product_revenue", conn)
+    df_customers = pd.read_sql_query("SELECT * FROM view_customer_summary", conn)
+    conn.close()
+    return df_revenue, df_customers
 
-# Sidebar Navigation
-st.sidebar.header("Navigation")
-page = st.sidebar.radio(
-    "Select View",
-    ["Overview", "Product Revenue Analysis", "Customer Insights", "System Logs"],
-)
+try:
+    df_rev, df_cust = load_data()
 
+    # KPI Summary Cards
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Total Products", len(df_rev))
+    col2.metric("Total Customers", len(df_cust))
+    col3.metric("Total Revenue ($)", f"${df_rev['total_revenue'].sum():,.2f}")
 
-def get_connection():
-    return sqlite3.connect(DB_PATH)
+    st.markdown("---")
 
+    # Analytical Charts Section
+    left_chart, right_chart = st.columns(2)
 
-# Page 1: Overview
-if page == "Overview":
-    st.subheader("📌 System Summary")
-    if os.path.exists(DB_PATH):
-        conn = get_connection()
-        try:
-            total_orders = pd.read_sql_query(
-                "SELECT COUNT(*) as count FROM staging_orders;", conn
-            ).iloc[0]["count"]
-            st.metric("Total Staging Orders Processed", f"{total_orders:,}")
-            st.success("Database Connection: Active")
-        except Exception as e:
-            st.error(f"Error reading staging data: {e}")
-        finally:
-            conn.close()
-    else:
-        st.warning(
-            "Database file `pipeline_staging.db` not found. Run `main.py` first."
-        )
+    with left_chart:
+        st.subheader("Product Revenue Performance")
+        fig, ax = plt.subplots()
+        sns.barplot(data=df_rev, x="total_revenue", y="product_name", ax=ax, palette="Blues_r")
+        ax.set_xlabel("Revenue ($)")
+        ax.set_ylabel("Product")
+        st.pyplot(fig)
 
-# Page 2: Product Revenue Analysis
-elif page == "Product Revenue Analysis":
-    st.subheader("📊 Product Revenue View")
-    if os.path.exists(DB_PATH):
-        conn = get_connection()
-        df_revenue = pd.read_sql_query(
-            "SELECT * FROM view_product_revenue;", conn
-        )
-        conn.close()
+    with right_chart:
+        st.subheader("Customer Spend Distribution")
+        fig2, ax2 = plt.subplots()
+        sns.histplot(df_cust["total_spend"], kde=True, ax=ax2, color="skyblue")
+        ax2.set_xlabel("Total Spend ($)")
+        st.pyplot(fig2)
 
-        if not df_revenue.empty:
-            st.dataframe(df_revenue, use_container_width=True)
-            st.bar_chart(
-                df_revenue.set_index(df_revenue.columns[0])[
-                    df_revenue.columns[1]
-                ]
-            )
-        else:
-            st.info("No data in `view_product_revenue`.")
-    else:
-        st.warning("Database not found.")
-
-# Page 3: Customer Insights
-elif page == "Customer Insights":
-    st.subheader("👥 Customer Summary View")
-    if os.path.exists(DB_PATH):
-        conn = get_connection()
-        df_customer = pd.read_sql_query(
-            "SELECT * FROM view_customer_summary;", conn
-        )
-        conn.close()
-
-        if not df_customer.empty:
-            st.dataframe(df_customer, use_container_width=True)
-        else:
-            st.info("No data in `view_customer_summary`.")
-    else:
-        st.warning("Database not found.")
-
-# Page 4: System Logs
-elif page == "System Logs":
-    st.subheader("📜 Live System Logs")
-    if os.path.exists(LOG_PATH):
-        with open(LOG_PATH, "r") as f:
-            logs = f.readlines()
-        st.code("".join(logs[-50:]), language="log")
-    else:
-        st.info("No log file found yet.")
+except Exception as e:
+    st.error(f"Please run 'py main.py' first to generate pipeline_staging.db! Error: {e}")
