@@ -1,71 +1,50 @@
+import streamlit as st
 import sqlite3
 import pandas as pd
-import streamlit as st
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-st.set_page_config(
-    page_title="Zaalima Data Pipeline Dashboard",
-    page_icon="📊",
-    layout="wide",
-)
+st.set_page_config(page_title="Zaalima Data Analytics Engine", layout="wide")
 
-st.title("📊 Zaalima Data Engineering Pipeline")
-st.markdown(
-    "Real-time visibility into local staging data, transformation views, and pipeline analytics."
-)
+st.title("📊 Zaalima Data Analytics Engine")
 
-# Connect to SQLite staging database
-DB_PATH = "pipeline_staging.db"
-
-
+# Fetch data from staging database
 @st.cache_data
-def load_data(query):
-    conn = sqlite3.connect(DB_PATH)
-    df = pd.read_sql_query(query, conn)
+def load_data():
+    conn = sqlite3.connect("pipeline_staging.db")
+    df_revenue = pd.read_sql_query("SELECT * FROM view_product_revenue", conn)
+    df_customers = pd.read_sql_query("SELECT * FROM view_customer_summary", conn)
     conn.close()
-    return df
+    return df_revenue, df_customers
 
+try:
+    df_rev, df_cust = load_data()
 
-# Sidebar Navigation
-st.sidebar.header("Pipeline Controls")
-view_option = st.sidebar.radio(
-    "Select View Mode", ["Overview & KPIs", "Staging Views", "Execution Logs"]
-)
-
-if view_option == "Overview & KPIs":
-    st.subheader("Key Performance Metrics")
+    # KPI Summary Cards
     col1, col2, col3 = st.columns(3)
+    col1.metric("Total Products", len(df_rev))
+    col2.metric("Total Customers", len(df_cust))
+    col3.metric("Total Revenue ($)", f"${df_rev['total_revenue'].sum():,.2f}")
 
-    try:
-        df_summary = load_data(
-            "SELECT COUNT(*) as total_records FROM product_revenue"
-        )
-        total_records = df_summary["total_records"].iloc[0]
-        col1.metric("Processed Staging Records", total_records)
-        col2.metric("Pipeline Status", "HEALTHY", delta="Active")
-        col3.metric("Database Engine", "SQLite Serverless")
-    except Exception as e:
-        st.warning(
-            f"Run your ETL scripts to populate staging database tables. ({e})"
-        )
+    st.markdown("---")
 
-elif view_option == "Staging Views":
-    st.subheader("Database Table Explorer")
-    table_name = st.selectbox(
-        "Select Staging Table / View",
-        ["product_revenue", "vw_product_summary"],
-    )
-    try:
-        df_table = load_data(f"SELECT * FROM {table_name}")
-        st.dataframe(df_table, use_container_width=True)
-    except Exception as e:
-        st.error(f"Could not load table '{table_name}': {e}")
+    # Analytical Charts Section
+    left_chart, right_chart = st.columns(2)
 
-elif view_option == "Execution Logs":
-    st.subheader("Pipeline Execution Logs")
-    try:
-        with open("pipeline_execution.log", "r") as log_file:
-            st.text_area(
-                "System Logs", log_file.read(), height=300, disabled=True
-            )
-    except FileNotFoundError:
-        st.info("No log file found. Run your ETL orchestrator to generate logs.")
+    with left_chart:
+        st.subheader("Product Revenue Performance")
+        fig, ax = plt.subplots()
+        sns.barplot(data=df_rev, x="total_revenue", y="product_name", ax=ax, palette="Blues_r")
+        ax.set_xlabel("Revenue ($)")
+        ax.set_ylabel("Product")
+        st.pyplot(fig)
+
+    with right_chart:
+        st.subheader("Customer Spend Distribution")
+        fig2, ax2 = plt.subplots()
+        sns.histplot(df_cust["total_spend"], kde=True, ax=ax2, color="skyblue")
+        ax2.set_xlabel("Total Spend ($)")
+        st.pyplot(fig2)
+
+except Exception as e:
+    st.error(f"Please run 'py main.py' first to generate pipeline_staging.db! Error: {e}")
